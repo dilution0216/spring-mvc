@@ -49,4 +49,49 @@ public class RequestController {
     public String helloPostRequestParam(@RequestParam String name, @RequestParam int age) {
         return String.format("Hello, @RequestParam.<br> name = %s, age = %d", name, age);
     }
+
+
+
+
+    // Body 부분에 data 가 name=Robbie&age=95 이렇게 들어왔을 때, 객체로 처리할 수 있는 방법이 있다. 그것이
+    // @ModelAttribute annotation . 이걸 사용하면 이 Body 부분에 들어온 Query String 방식의 데이터를
+    // 이 객체에 Mapping 해서 가지고 올 수 있다.
+    // [Request sample]
+    // POST http://localhost:8080/hello/request/form/model
+    // Header
+    //  Content type: application/x-www-form-urlencoded
+    // Body
+    //  name=Robbie&age=95
+    @PostMapping("/form/model")
+    @ResponseBody
+    public String helloRequestBodyForm(@ModelAttribute Star star) {
+        return String.format("Hello, @ModelAttribute.<br> (name = %s, age = %d) ", star.name, star.age);
+    }
+
+
+
+    // Query String 방식(Request Param 방식) 으로 넘어온 데이터도 @ModelAttribute 로 받을 수 있다.
+    // [Request sample]
+    // GET http://localhost:8080/hello/request/form/param/model?name=Robbie&age=95
+    @GetMapping("/form/param/model")
+    @ResponseBody
+    public String helloRequestParam(@ModelAttribute Star star) {
+        return String.format("Hello, @ModelAttribute.<br> (name = %s, age = %d) ", star.name, star.age);
+    }
+
+    // @RequestBdoy annotation 을 통해 json to Object
+    // 즉, HTTP Body 부분에 JSON 형식으로 데이터가 넘어왔을 때에
+    // 이를 처리하기 위한 class 를 만들어서 파라미터를 넣어주고, 그 앞에 @Request Body를
+    // 꼭, 반드시!! 넣어줘야 한다.
+    // [Request sample]
+    // POST http://localhost:8080/hello/request/form/json
+    // Header
+    //  Content type: application/json
+    // Body
+    //  {"name":"Robbie","age":"95"}
+    @PostMapping("/form/json")
+    @ResponseBody
+    public String helloPostRequestJson(@RequestBody Star star) {
+        return String.format("Hello, @RequestBody.<br> (name = %s, age = %d) ", star.name, star.age);
+    }
 }
